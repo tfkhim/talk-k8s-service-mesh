@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+
+    <title>Service Meshes</title>
+  </head>
+
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section
+          class="right"
+          data-disable-scandio-background
+          data-background-image="/title_slide_image.png,/title_slide_background.png"
+          data-background-size="45% auto,43.5% 100%"
+          data-background-position="5% center,left"
+        >
+          <header style="margin-bottom: 100px">
+            <img style="width: 300px" src="/scandio_logo.png" />
+          </header>
+
+          <h2>Service Meshes</h2>
+          <h4>What, How and Why</h4>
+
+          <footer style="margin-top: 100px">
+            <p style="color: darkgray">Thomas Himmelstoß</p>
+          </footer>
+        </section>
+
+        <section>
+          <h1>About me</h1>
+          <ul>
+            <li>Senior software developer</li>
+            <li>With Scandio since 2021</li>
+            <li>C++, Java, Python, TypeScript and Rust</li>
+            <li>Microservice architecture in customer projects</li>
+          </ul>
+        </section>
+
+        <section>
+          <section>
+            <h1>Motivation</h1>
+          </section>
+          <section>
+            <h4>Startup</h4>
+            <p>Hello World Solutions</p>
+
+            <aside class="notes" data-markdown>
+              <textarea data-template>
+                - One service
+                - One ReST endpoint
+                - A simple and beautiful monolith
+              </textarea>
+            </aside>
+          </section>
+          <section>
+            <h4>Customer base increases</h4>
+            <ul>
+              <li>Logging</li>
+              <li>Authentication</li>
+              <li>Measure performance</li>
+            </ul>
+          </section>
+          <section>
+            <h4>Cross-cutting concerns</h4>
+            <blockquote style="font-size: xx-large">
+              In principle, you can reason about your persistence strategy in a
+              modular, encapsulated way. Yet, in practice, you have to spread
+              essentially the same code [...] across many objects. We use the
+              term cross-cutting concerns for concerns like this. [...] In
+              aspect oriented programming, modular constructs called aspects
+              specify which points in the system should have their behavior
+              modified in some consistent way to support a particular concern.
+            </blockquote>
+            <p class="reference">Robert C. Martin, <cite>Clean Code</cite></p>
+
+            <aside class="notes" data-markdown>
+              <textarea data-template>
+                - Our team realizes those new requirements are cross-cutting concerns
+                - They need to support them across the service in a consistent way
+                - They realize the middlewares of their framework are aspects
+                - But not everything can be generic. There is also the need for
+                  custom tailored logs and metrics
+              </textarea>
+            </aside>
+          </section>
+          <section>
+            <img class="r-stretch" src="/minimum-viable-architecture.webp" />
+            <p class="reference">
+              Randy Shoup,
+              <cite
+                ><a
+                  href="https://www.slideshare.net/RandyShoup/minimum-viable-architecture-good-enough-is-good-enough"
+                  >Minimum Viable Architecture - Good Enough is Good Enough</a
+                ></cite
+              >
+            </p>
+
+            <aside class="notes" data-markdown>
+              <textarea data-template>
+                - Moving from the starting phase into the scaling phase
+                - Business and teams grow
+                - Split into micro services
+                - Kubernetes for orchestration
+                - Additional programming languages and frameworks
+              </textarea>
+            </aside>
+          </section>
+          <section>
+            <h4>New cross-cutting concerns</h4>
+            <ul>
+              <li>Encryption</li>
+              <li>Access control</li>
+              <li>Traffic management</li>
+              <li>Tracing</li>
+              <li>Monitoring</li>
+            </ul>
+          </section>
+          <section>
+            <h4>Can services still focus on business logic?</h4>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h1>Service Mesh</h1>
+          </section>
+          <section>
+            <blockquote cite="https://servicemesh.es/">
+              A service mesh is a dedicated infrastructure layer that adds
+              features to a network between services. [...] a service mesh does
+              not require code changes. Instead, it adds a layer of additional
+              containers that implement the features reliably and agnostic to
+              technology or programming language.
+            </blockquote>
+            <p class="reference">
+              <cite><a href="https://servicemesh.es/">servicemesh.es</a></cite>
+            </p>
+          </section>
+          <section data-visibility="hidden">
+            <h4>Linkerd</h4>
+            <blockquote cite="https://linkerd.io/what-is-a-service-mesh/">
+              A service mesh like Linkerd is a tool for adding observability,
+              security, and reliability features to “cloud native” applications
+              by transparently inserting this functionality at the platform
+              layer rather than the application layer.
+            </blockquote>
+          </section>
+          <section data-visibility="hidden">
+            <h4>Istio</h4>
+            <blockquote cite="https://istio.io/latest/about/service-mesh/">
+              A service mesh is a dedicated infrastructure layer that you can
+              add to your applications. It allows you to transparently add
+              capabilities like observability, traffic management, and security,
+              without adding them to your own code.
+            </blockquote>
+          </section>
+          <section>
+            <img class="r-stretch" src="/architecture.svg" />
+          </section>
+          <section>
+            <h4>Drawbacks</h4>
+            <ul>
+              <li>Network latency</li>
+              <li>Resource consumption</li>
+              <li>Operational complexity</li>
+            </ul>
+
+            <aside class="notes" data-markdown>
+              <textarea data-template>
+                - The proxy sidecar requires an extra network hop
+                - Sidecar requires CPU cycles and memory
+                - Resource consumption varies between Service Mesh implementations
+                - Developers must know about the features a Service Mesh provides
+                - A service may not be able to connect during startup until the sidecar proxy is up and running
+              </textarea>
+            </aside>
+          </section>
+          <section>
+            <h4>Features</h4>
+            <ul>
+              <li>Security</li>
+              <li>Traffic management</li>
+              <li>Observability</li>
+              <li>Site Reliability Engineering</li>
+            </ul>
+          </section>
+          <section>
+            <img class="r-stretch" src="/only_one_implementation.jpg" />
+            <p class="reference">
+              <a
+                href="https://imgflip.com/memegenerator/322841258/Anakin-Padme-4-Panel"
+                >imgflip.com</a
+              >
+            </p>
+          </section>
+          <section>
+            <h4>Implementations</h4>
+            <ul>
+              <li>
+                <a href="https://istio.io/">Istio</a>
+              </li>
+              <li><a href="https://www.consul.io/">Consul</a></li>
+              <li>
+                <a href="https://linkerd.io/">Linkerd</a>
+              </li>
+              <li>
+                <a href="https://aws.amazon.com/app-mesh">AWS App Mesh</a>
+              </li>
+              <li><a href="https://kuma.io">Kuma</a></li>
+              <li>
+                <a href="https://www.nginx.com/products/nginx-service-mesh/"
+                  >NGINX Service Mesh</a
+                >
+              </li>
+              <li>
+                <a href="https://traefik.io/traefik-mesh/"
+                  >Traefik Mesh (Quite different concept)</a
+                >
+              </li>
+              <li>
+                <a href="https://openservicemesh.io/"
+                  >Open Service Mesh (Archived)</a
+                >
+              </li>
+              <li>Many more you probably have never heard of</li>
+            </ul>
+
+            <aside class="notes" data-markdown>
+              <textarea data-template>
+                - Traefik Mesh:
+                  - Runs a proxy on each *node*
+                  - Mesh controller
+                - CNCF status:
+                  - Graduated: Linkerd
+                  - Incubating: Istio
+                  - Sandbox: Kuma
+                  - Archived: Open Service mesh
+                - Affiliation:
+                  - Istio: IBM, Google and Lyft
+                  - Linkerd: Buoyant
+                  - AWS App Mesh: AWS
+                  - Consul: HashiCorp
+                  - Traefik Mesh: Traefik Labs
+                  - Kuma: Kong
+                  - Open Service Mesh: Microsoft
+                  - NGINX Service Mesh: F5
+              </textarea>
+            </aside>
+          </section>
+          <section>
+            <table>
+              <tr>
+                <th>Service Mesh</th>
+                <th>Stars</th>
+                <th>Issues*</th>
+              </tr>
+              <tr>
+                <td>Istio</td>
+                <td>33.3k</td>
+                <td>17.9k</td>
+              </tr>
+              <tr>
+                <td>Consul</td>
+                <td>26.6k</td>
+                <td>5.2k</td>
+              </tr>
+              <tr>
+                <td>Linkerd</td>
+                <td>9.7k</td>
+                <td>3.6k</td>
+              </tr>
+              <tr>
+                <td>Kuma</td>
+                <td>3.2k</td>
+                <td>1.6k</td>
+              </tr>
+              <tr>
+                <td>Open Service Mesh</td>
+                <td>2.6k</td>
+                <td>1.7k</td>
+              </tr>
+              <tr>
+                <td>Traefik Mesh**</td>
+                <td>1.9k</td>
+                <td>374</td>
+              </tr>
+            </table>
+            <footer>
+              <p class="footnote">* sum off opened and closed issues</p>
+              <p class="footnote">
+                ** considering only the
+                <a href="https://github.com/traefik/mesh">traefic/mesh</a> repo
+              </p>
+            </footer>
+
+            <aside class="notes" data-markdown>
+              <textarea data-template>
+                - Couldn't use Google trends because Consul and Kuma are ambiguous search terms
+                - I believe the sum of issues is a good metric for how many people use a technology
+                - Assumption: The fraction of people creating issues is similar between projects
+              </textarea>
+            </aside>
+          </section>
+          <section>
+            <h4>Service Mesh Interface (CNCF)</h4>
+            <img src="https://imgs.xkcd.com/comics/standards.png" />
+            <p class="reference">
+              <cite
+                ><a href="https://xkcd.com/927">https://xkcd.com/927</a></cite
+              >
+            </p>
+          </section>
+          <section>
+            <h4>Service Mesh Interface (CNCF)</h4>
+            <p>TODO: Given an overview</p>
+          </section>
+          <section>
+            <h4>Implementation independent resources</h4>
+            <p><a href="https://layer5.io/">Layer5 Community</a></p>
+            <p>
+              <a href="https://smi-spec.io/">Service Mesh Interface (CNCF)</a>
+            </p>
+            <p><a href="https://servicemesh.es/">servicemesh.es (INNOQ)</a></p>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h1>Security</h1>
+          </section>
+          <section>
+            <h4>Encryption (mTLS)</h4>
+            <img class="r-stretch" src="/mtls.svg" />
+
+            <aside class="notes" data-markdown>
+              <textarea data-template>
+                 - Encrypted traffic between proxies
+                - Proxy and application communicate unencrypted
+                - Gradual adoption
+              </textarea>
+            </aside>
+          </section>
+          <section>
+            <h4>Authorization</h4>
+            <img class="r-stretch" src="/authorization.svg" />
+
+            <aside class="notes" data-markdown>
+              <textarea data-template>
+                - Authorization needs authentication
+                - Therefore mTLS is a requirement for authorization
+              </textarea>
+            </aside>
+          </section>
+          <section>
+            <h4>Other security featues</h4>
+            <ul>
+              <li>End user authentication with JWT</li>
+              <li>End user authorization with JWT claims</li>
+            </ul>
+
+            <aside class="notes" data-markdown>
+              <textarea data-template>
+                - As a first layer of security
+                - But you will probably still need to do JWT parsing and authorization in applications
+                - But security also benefits from multiple layers
+              </textarea>
+            </aside>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h1>Traffic management</h1>
+          </section>
+          <section>
+            <h4>Traffic splitting</h4>
+            <img class="r-stretch" src="/traffic-shifting.svg" />
+
+            <aside class="notes" data-markdown>
+              <textarea data-template>
+                Strategies:
+                  - Weighted routing
+                  - Based on the contents of a HTTP request (e.g. header value)
+                  - Automation (e.g. [Flagger](https://flagger.app/) or [Argo Rollouts](https://argo-rollouts.readthedocs.io/en/stable/))
+              </textarea>
+            </aside>
+          </section>
+          <section>
+            <h4>Timeouts</h4>
+            <ul>
+              <li>
+                Limit the time how long the proxy will waiting for an out going
+                call
+              </li>
+              <li>Configurable on HTTP method or path level</li>
+            </ul>
+          </section>
+          <section>
+            <h4>Retries</h4>
+            <ul>
+              <li>Retry failed or timed out requests</li>
+              <li>Configurable on HTTP method or path level</li>
+              <li>Linkerd offers retry budgets</li>
+              <li>Istio offers per try timeouts</li>
+            </ul>
+          </section>
+          <section>
+            <h4>Circuit breaking</h4>
+          </section>
+          <section>
+            <h4>Other traffic management featues</h4>
+            <ul>
+              <li>Routing based on JWT content</li>
+              <li>Maximum number of allowed upstream connections per host</li>
+              <li>Remove failing upstream hosts from load balancing</li>
+              <li>Traffic mirroring</li>
+            </ul>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h1>Observability</h1>
+          </section>
+          <section>
+            <h4>Visualization</h4>
+            <p>TODO: Image Kiali</p>
+          </section>
+          <section>
+            <h4>Other observability features</h4>
+            <ul>
+              <li>Metrics</li>
+              <li>Tracing</li>
+            </ul>
+          </section>
+        </section>
+
+        <section>
+          <h1>Site Reliability Engineering</h1>
+
+          <aside class="notes" data-markdown>
+            <textarea data-template>
+              - Add delays to specific requests
+              - Terminate specific requests with a HTTP error
+            </textarea>
+          </aside>
+        </section>
+
+        <section>
+          <h1>Demo time</h1>
+        </section>
+
+        <section>
+          <section>
+            <h2>Which service mesh?</h2>
+          </section>
+          <section>
+            <h4>Identify your most important requirements</h4>
+            <blockquote cite="https://istio.io/latest/about/deployment/">
+              Whatever your goals, the most successful Istio implementations
+              start by identifying one use case and solving for that. Once
+              you’ve configured the mesh to solve a problem, you can easily
+              enable other features, increasing the usefulness of your
+              deployment.
+            </blockquote>
+          </section>
+          <section>
+            <ul>
+              <li>
+                Research which kind of support different service meshes can
+                offer you
+              </li>
+              <li>Try out your top candidates</li>
+              <li>
+                If you already have a Kubernetes cluster most Service Mesh
+                setups are easy
+              </li>
+            </ul>
+          </section>
+          <section>
+            <p>
+              Depending on your requirements and environment libraries can be a
+              valid alternative
+            </p>
+          </section>
+          <section>
+            <h4>Should you use a Service Mesh?</h4>
+            <p>It depends</p>
+          </section>
+        </section>
+
+        <section>
+          <section>
+            <h1>Thank you</h1>
+          </section>
+        </section>
+      </div>
+    </div>
+
+    <script type="module" src="./index.js"></script>
+  </body>
+</html>

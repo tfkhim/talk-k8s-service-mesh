@@ -1,0 +1,27 @@
+{
+  "name": "k8s-service-mesh-talk",
+  "version": "1.0.0",
+  "author": "Thomas Himmelstoss",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "vite",
+    "build": "vite build",
+    "lint": "prettier --check .",
+    "fix": "prettier --write ."
+  },
+  "dependencies": {
+    "reveal.js": "4.5.0",
+    "reveal.js-mermaid-plugin": "1.1.0"
+  },
+  "devDependencies": {
+    "prettier": "2.8.8",
+    "vite": "4.3.9"
+  },
+  "prettier": {
+    "trailingComma": "es5",
+    "tabWidth": 2,
+    "semi": false,
+    "singleQuote": true
+  }
+}

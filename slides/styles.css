@@ -1,0 +1,30 @@
+.mermaid {
+  /* This setting fixes an issue with cut of text due
+       to a wrong line height
+       See: https://github.com/zjffun/reveal.js-mermaid-plugin/issues/5
+    */
+  line-height: 1;
+}
+
+.reveal .reference {
+  width: 70%;
+  margin: 0 auto;
+  font-size: large;
+  text-align: end;
+}
+
+.reveal .footnote {
+  font-size: large;
+  text-align: end;
+}
+
+.reveal section.right {
+  width: 50%;
+  right: 0;
+  text-align: start;
+}
+
+.reveal section:not(.stack, .right) {
+  width: 960px !important;
+  left: 142px;
+}
