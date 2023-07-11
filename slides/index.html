@@ -308,17 +308,29 @@
             </aside>
           </section>
           <section>
-            <h4>Service Mesh Interface (CNCF)</h4>
+            <h4>Service Mesh Interface</h4>
             <img src="https://imgs.xkcd.com/comics/standards.png" />
             <p class="reference">
               <cite
                 ><a href="https://xkcd.com/927">https://xkcd.com/927</a></cite
               >
             </p>
-          </section>
-          <section>
-            <h4>Service Mesh Interface (CNCF)</h4>
-            <p>TODO: Given an overview</p>
+
+            <aside class="notes" data-markdown>
+              <textarea data-template>
+                - Common portable API to avoid strong coupling to a provider
+                - A CNCF sandbox project since 2020
+                - A specification for a set of CRD
+                - No implementation by itself but relies on providers like Istio
+                - Subset of the features of all providers
+                  - Authorization
+                  - Traffic splitting (weighted and based on HTTP content)
+                  - Metrics (mostly aimed towards consumption by tooling)
+                - Seems to have only [initial and experimental](https://layer5.io/projects/service-mesh-interface-conformance)
+                  support by any of the service meshes
+                - Ironically Open Service Mesh had the best support
+              </textarea>
+            </aside>
           </section>
           <section>
             <h4>Implementation independent resources</h4>
