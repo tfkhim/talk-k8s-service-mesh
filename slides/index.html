@@ -43,6 +43,16 @@
         </section>
 
         <section>
+          <h1>Agenda</h1>
+          <ul>
+            <li>Motivation</li>
+            <li>The what and how</li>
+            <li>Features</li>
+            <li>Demo</li>
+          </ul>
+        </section>
+
+        <section>
           <section>
             <h1>Motivation</h1>
           </section>
@@ -353,7 +363,7 @@
 
             <aside class="notes" data-markdown>
               <textarea data-template>
-                 - Encrypted traffic between proxies
+                - Encrypted traffic between proxies
                 - Proxy and application communicate unencrypted
                 - Gradual adoption
               </textarea>
@@ -367,6 +377,11 @@
               <textarea data-template>
                 - Authorization needs authentication
                 - Therefore mTLS is a requirement for authorization
+                - Approach varies. For Istio and Linkerd:
+                  - Create a default policy to deny every request
+                  - Attach service accounts to your pods
+                  - Allow requests for specific service accounts
+                - You can configure different policies for each path
               </textarea>
             </aside>
           </section>
@@ -379,6 +394,9 @@
 
             <aside class="notes" data-markdown>
               <textarea data-template>
+                - Istio only feature
+                - You need to configure a key endpoint
+                - Reject traffic with invalid JWT token at the gateway into the mesh
                 - As a first layer of security
                 - But you will probably still need to do JWT parsing and authorization in applications
                 - But security also benefits from multiple layers
@@ -397,43 +415,93 @@
 
             <aside class="notes" data-markdown>
               <textarea data-template>
-                Strategies:
+                - No additional containers need to be started
+                - This makes predicting performance easier
+                - Strategies:
                   - Weighted routing
                   - Based on the contents of a HTTP request (e.g. header value)
-                  - Automation (e.g. [Flagger](https://flagger.app/) or [Argo Rollouts](https://argo-rollouts.readthedocs.io/en/stable/))
+                - Automation (e.g. [Flagger](https://flagger.app/) or [Argo Rollouts](https://argo-rollouts.readthedocs.io/en/stable/))
+                - Good for canary releases of global things like framework config changes and dependency updates
+                  - Such changes can't be feature toggled
+                - Not a good fit for A/B testing:
+                  - You need one service version for each different toggle configuration
+                  - For long running experiments this adds some cost
+                  - Feature toggles are more flexible for that
+                - Also supported by plain old ingress solutions
+                  - Can also be automated with Flagger and Argo Rollouts
+                  - Might be enough if you do not have deep sync. request chains (e.g. Event Driven Architecture)
               </textarea>
             </aside>
           </section>
           <section>
             <h4>Timeouts</h4>
             <ul>
-              <li>
-                Limit the time how long the proxy will waiting for an out going
-                call
-              </li>
+              <li>Limit the time how long a request can take</li>
               <li>Configurable on HTTP method or path level</li>
             </ul>
+
+            <aside class="notes" data-markdown>
+              <textarea data-template>
+                - Good fit for a service mesh because the problem was introduced
+                  by the microservice split
+                - GET might be much faster than POST
+                - Also offered by a good HTTP client library
+              </textarea>
+            </aside>
           </section>
           <section>
             <h4>Retries</h4>
             <ul>
               <li>Retry failed or timed out requests</li>
               <li>Configurable on HTTP method or path level</li>
-              <li>Linkerd offers retry budgets</li>
-              <li>Istio offers per try timeouts</li>
             </ul>
+
+            <aside class="notes" data-markdown>
+              <textarea data-template>
+                - Good fit for a service mesh because the problem was introduced
+                  by the microservice split
+                - Retrying is only possible for immutable and indempotent endpoints
+                - Retries can put even more pressure on resources that are overloaded
+                  - Linkerd: Retry budget -> Only x % of the original request can be retries
+                  - Circuit breaking can help here
+                - Also offered by a good HTTP client library
+              </textarea>
+            </aside>
           </section>
           <section>
             <h4>Circuit breaking</h4>
+            <ul>
+              <li>Fail early in the request chain</li>
+              <li>Reduce load on an overloaded service</li>
+              <li>Gives the service time to recover</li>
+            </ul>
+
+            <aside class="notes" data-markdown>
+              <textarea data-template>
+                - Good fit for a service mesh because the problem was introduced
+                  by the microservice split
+                - Triggered by consecutive errors (5xx status code for Linkerd and Istio)
+                - Istio also allows to specify the number of connections to a host
+                - Also offered by a good HTTP client library
+              </textarea>
+            </aside>
           </section>
           <section>
             <h4>Other traffic management featues</h4>
             <ul>
               <li>Routing based on JWT content</li>
-              <li>Maximum number of allowed upstream connections per host</li>
-              <li>Remove failing upstream hosts from load balancing</li>
               <li>Traffic mirroring</li>
             </ul>
+
+            <aside class="notes" data-markdown>
+              <textarea data-template>
+                - Istio can route traffic at the gateway based on JWT contents
+                - Traffic mirroring sends a copy for specific parts of regular traffic
+                  different service
+                  - The mirroring doesn't increase the request time of the regular traffic
+                  - Useful for testing changes under real load
+              </textarea>
+            </aside>
           </section>
         </section>
 
@@ -442,15 +510,29 @@
             <h1>Observability</h1>
           </section>
           <section>
-            <h4>Visualization</h4>
+            <h4>Visualization of traffic</h4>
             <p>TODO: Image Kiali</p>
           </section>
           <section>
             <h4>Other observability features</h4>
             <ul>
-              <li>Metrics</li>
-              <li>Tracing</li>
+              <li>Traffic metrics</li>
+              <li>Distributed tracing at the proxy level</li>
             </ul>
+
+            <aside class="notes" data-markdown>
+              <textarea data-template>
+                - Can automatically generate traffic related metrics e.g.:
+                  - Request count
+                  - Request duration
+                  - Request size
+                  - Response size
+                - Frameworks like Spring normally have support for HTTP server and client metrics (and more)
+                - Proxies can automatically send distributed tracing spans for the whole service
+                  - The application must still forward the tracing headers
+                  - Tracing libs (e.g. OpenTelementry) do that and allow you to do more fine grained instrumentation
+              </textarea>
+            </aside>
           </section>
         </section>
 
@@ -461,6 +543,9 @@
             <textarea data-template>
               - Add delays to specific requests
               - Terminate specific requests with a HTTP error
+              - It is a nice bonus, but:
+                - Running a sidecar proxy for that seems costly
+                - Other solutions might be a better fit
             </textarea>
           </aside>
         </section>
@@ -470,47 +555,33 @@
         </section>
 
         <section>
-          <section>
-            <h2>Which service mesh?</h2>
-          </section>
-          <section>
-            <h4>Identify your most important requirements</h4>
-            <blockquote cite="https://istio.io/latest/about/deployment/">
-              Whatever your goals, the most successful Istio implementations
-              start by identifying one use case and solving for that. Once
-              you’ve configured the mesh to solve a problem, you can easily
-              enable other features, increasing the usefulness of your
-              deployment.
-            </blockquote>
-          </section>
-          <section>
-            <ul>
-              <li>
-                Research which kind of support different service meshes can
-                offer you
-              </li>
-              <li>Try out your top candidates</li>
-              <li>
-                If you already have a Kubernetes cluster most Service Mesh
-                setups are easy
-              </li>
-            </ul>
-          </section>
-          <section>
-            <p>
-              Depending on your requirements and environment libraries can be a
-              valid alternative
-            </p>
-          </section>
-          <section>
-            <h4>Should you use a Service Mesh?</h4>
-            <p>It depends</p>
-          </section>
+          <h1>Summary</h1>
+
+          <aside class="notes" data-markdown>
+            <textarea data-template>
+              - What we talked about:
+                - How a service mesh works
+                - Their costs
+                - Their features
+                - Alternatives
+                - Demo
+              - Should you use a one?
+                - It depends on ...
+                  - your requirements
+                  - your architecture
+                  - your programming language choices
+                  - frameworks and available libraries
+            </textarea>
+          </aside>
         </section>
 
         <section>
           <section>
             <h1>Thank you</h1>
+
+            <p>TODO: ScandiO image</p>
+
+            <p>... and have fun</p>
           </section>
         </section>
       </div>
