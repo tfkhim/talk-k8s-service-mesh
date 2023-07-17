@@ -1,0 +1,4 @@
+INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http2")].nodePort}')
+SECURE_INGRESS_PORT=$(kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="https")].nodePort}')
+INGRESS_HOST=$(minikube ip)
+PRODUCT_PAGE_URL="http://${INGRESS_HOST}:${INGRESS_PORT}/productpage"
