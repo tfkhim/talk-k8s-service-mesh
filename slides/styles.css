@@ -8,9 +8,20 @@
 
 .reveal .reference {
   width: 70%;
+  padding: 5px;
   margin: 0 auto;
   font-size: large;
   text-align: end;
+}
+
+.reveal img.block-width {
+  width: 70%;
+  margin: var(--r-block-margin) auto;
+}
+
+.reveal img.shadow {
+  background-color: var(--r-background-color);
+  box-shadow: 2px 2px 10px darkgray;
 }
 
 .reveal .footnote {

@@ -100,7 +100,12 @@
             </aside>
           </section>
           <section>
-            <img class="r-stretch" src="/minimum-viable-architecture.webp" />
+            <!-- TODO: The block-width hack only works for images with specific aspect ratios -->
+            <img
+              class="block-width"
+              style="clip-path: inset(0 0 40px 0)"
+              src="/minimum-viable-architecture.webp"
+            />
             <p class="reference">
               Randy Shoup,
               <cite
@@ -202,7 +207,8 @@
           </section>
           <section>
             <img class="r-stretch" src="/only_one_implementation.jpg" />
-            <p class="reference">
+            <!-- TODO: Fix the ugly magic number -->
+            <p class="reference" style="width: 63%">
               <a
                 href="https://imgflip.com/memegenerator/322841258/Anakin-Padme-4-Panel"
                 >imgflip.com</a
@@ -301,7 +307,7 @@
                 <td>374</td>
               </tr>
             </table>
-            <footer>
+            <footer class="reference">
               <p class="footnote">* sum off opened and closed issues</p>
               <p class="footnote">
                 ** considering only the
@@ -320,7 +326,11 @@
           </section>
           <section>
             <h4>Service Mesh Interface</h4>
-            <img src="https://imgs.xkcd.com/comics/standards.png" />
+            <!-- TODO: The block-width hack only works for images with specific aspect ratios -->
+            <img
+              class="block-width"
+              src="https://imgs.xkcd.com/comics/standards.png"
+            />
             <p class="reference">
               <cite
                 ><a href="https://xkcd.com/927">https://xkcd.com/927</a></cite
@@ -511,7 +521,7 @@
           </section>
           <section>
             <h4>Visualization of traffic</h4>
-            <img class="r-stretch" src="/kiali_graph.png" />
+            <img class="r-stretch shadow" src="/kiali_graph.png" />
           </section>
           <section>
             <h4>Other observability features</h4>
@@ -556,12 +566,13 @@
           </section>
           <section>
             <img
-              class="r-stretch"
+              class="r-stretch shadow"
+              style="padding: 5px"
               src="https://istio.io/latest/docs/examples/bookinfo/noistio.svg"
             />
 
-            <p class="reference">
-              Source:
+            <!-- TODO: Fix the ugly magic number -->
+            <p class="reference" style="width: 92.5%">
               <cite>
                 <a href="https://istio.io/latest/docs/examples/bookinfo/">
                   https://istio.io/latest/docs/examples/bookinfo/
