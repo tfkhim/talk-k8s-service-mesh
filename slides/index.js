@@ -35,7 +35,7 @@ const scandioPlugin = {
 
       slide.setAttribute(
         'data-background-image',
-        '/hexagon.png,/hexagon.png,/hexagon.png,/hexagon.png,/hexagon.png'
+        './hexagon.png,./hexagon.png,./hexagon.png,./hexagon.png,./hexagon.png'
       )
       slide.setAttribute(
         'data-background-size',
